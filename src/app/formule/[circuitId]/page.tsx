@@ -1,11 +1,11 @@
-interface PageCircuitProps {
-  params: {
+interface PageProps {
+  params: Promise<{
     circuitId: string;
-  };
+  }>
 }
 
-export default function CircuitPage({ params }: PageCircuitProps) {
-    const { circuitId } = params;
+export default async function CircuitPage({ params }: PageProps) {
+    const { circuitId } = await params;
     
     return (
         <div>
