@@ -1,4 +1,5 @@
 'use client'
+import Link from 'next/link'
 import { useEffect, useState } from 'react'
 
 type F1Result = {
@@ -8,15 +9,24 @@ type F1Result = {
   time: string
 }
 
+type Race = {
+  round: string
+  Circuit: {
+    circuitId: string
+  }
+} 
+
 export default function Page() {
 
-    const [results, setResults] = useState<F1Result[]>([])
-    const [raceName, setRaceName] = useState<string>('')
+    // const [results, setResults] = useState<F1Result[]>([])
+    // const [raceName, setRaceName] = useState<string>('')
+
+    const [racesResults, setRaceResults] = useState<Race[]>([])
     const [loading, setLoading] = useState<boolean>(true)
     const [error, setError] = useState<string | null>(null)
 
     useEffect(() => {
-        const fetchResults = async () => {
+        /* const fetchResults = async () => {
           try {
             const res = await fetch('/api/f1')
             if (!res.ok) throw new Error(`Erreur: ${res.status}`)
@@ -31,7 +41,23 @@ export default function Page() {
           }
         }
     
-        fetchResults()
+        fetchResults() */
+
+        const fetchRaces = async () => {
+          try {
+            const res = await fetch('/api/races')
+            if (!res.ok) throw new Error(`Erreur: ${res.status}`)
+            const data = await res.json()
+    
+            setRaceResults(data.results)
+          } catch (err: unknown) {
+            setError(err instanceof Error ? err.message : 'Une erreur inconnue est survenue')
+          } finally {
+            setLoading(false)
+          }
+        }
+    
+        fetchRaces()
       }, [])
     
       if (loading) return <p>Chargement...</p>
@@ -39,29 +65,14 @@ export default function Page() {
     
     return (
         <div>   
-            <h1>Formule page</h1>
-
-            <h2 className="text-xl font-bold mb-4">{raceName}</h2>
-            <table className="w-full border-collapse">
-                <thead>
-                <tr>
-                    <th className="border p-2">Pos</th>
-                    <th className="border p-2">Pilote</th>
-                    <th className="border p-2">Écurie</th>
-                    <th className="border p-2">Temps</th>
-                </tr>
-                </thead>
-                <tbody>
-                {results.map((r) => (
-                    <tr key={r.position}>
-                    <td className="border p-2">{r.position}</td>
-                    <td className="border p-2">{r.driver}</td>
-                    <td className="border p-2">{r.constructor}</td>
-                    <td className="border p-2">{r.time}</td>
-                    </tr>
-                ))}
-                </tbody>
-            </table>
+            <h1>Liste des courses</h1>
+            {racesResults.map((r) => (
+                <div key={r.round} className="flex flex-row gap-2">
+                    <div>round: {r.round}</div>
+                    <div>circuitId: {r.Circuit.circuitId}</div>
+                    <Link href={`/formule/${r.Circuit.circuitId}`}>{r.Circuit.circuitId}</Link>
+                </div>
+            ))}
         </div>
     )
   }
