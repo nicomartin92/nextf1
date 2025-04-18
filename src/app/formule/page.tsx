@@ -2,13 +2,6 @@
 import Link from 'next/link'
 import { useEffect, useState } from 'react'
 
-type F1Result = {
-  position: string
-  driver: string
-  constructor: string
-  time: string
-}
-
 type Race = {
   round: string
   Circuit: {
