@@ -1,5 +1,24 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 
+type Race = {
+  Circuit: {
+    circuitId: string
+  }
+  round: string
+}
+
+type RaceTable = {
+  Races: Race[]
+}
+
+type MRData = {
+  RaceTable: RaceTable
+}
+
+type Results = {
+  MRData: MRData
+}
+
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
@@ -14,11 +33,11 @@ export default async function handler(
     if (!allResults.ok) {
         throw new Error(`Ergast API error: ${allResults.status}`)
     }
-    const results = await allResults.json()
+    const results: Results = await allResults.json()
   
     // get parameter from url
-    const round = results.MRData.RaceTable.Races.filter((race: any) => {
-      return race.Circuit.circuitId === circuitId
+    const round = results.MRData.RaceTable.Races.filter((race: Race) => {
+      return race.Circuit.circuitId === circuitId.toString()
     })[0].round
   
     /* ------------------------------ */
@@ -37,7 +56,7 @@ export default async function handler(
             winners: winners.MRData.RaceTable.Races[0].Results,
           }
     )
-  } catch (error: any) {
-    res.status(500).json({ error: error.message || 'Something went wrong' })
+  } catch (error: unknown) {
+    res.status(500).json({ error: error instanceof Error ? error.message : 'Something went wrong' })
   }
 }

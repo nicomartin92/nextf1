@@ -23,8 +23,8 @@ export default function F1Results() {
 
         setRaceName(data.raceName)
         setResults(data.results)
-      } catch (err: any) {
-        setError(err.message)
+      } catch (err: unknown) {
+        setError(err instanceof Error ? err.message : 'Une erreur inconnue est survenue')
       } finally {
         setLoading(false)
       }

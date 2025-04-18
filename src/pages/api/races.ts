@@ -1,6 +1,27 @@
-
-
 import type { NextApiRequest, NextApiResponse } from 'next'
+
+type Race = {
+  raceName: string
+  round: string
+  Circuit: {
+    circuitId: string
+    circuitName: string
+  }
+  date: string
+  time: string
+}
+
+type RaceTable = {
+  Races: Race[]
+}
+
+type MRData = {
+  RaceTable: RaceTable
+}
+
+type ResponseData = {
+  MRData: MRData
+}
 
 export default async function handler(
   req: NextApiRequest,
@@ -13,7 +34,7 @@ export default async function handler(
       throw new Error(`Ergast API error: ${response.status}`)
     }
 
-    const data = await response.json()
+    const data: ResponseData = await response.json()
 
     const races = data?.MRData?.RaceTable?.Races || []
 
@@ -22,7 +43,7 @@ export default async function handler(
             results: races 
         }
     )
-  } catch (error: any) {
-    res.status(500).json({ error: error.message || 'Something went wrong' })
+  } catch (error: unknown) {
+    res.status(500).json({ error: error instanceof Error ? error.message : 'Something went wrong' })
   }
 }
