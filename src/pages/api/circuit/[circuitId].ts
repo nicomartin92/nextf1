@@ -24,28 +24,27 @@ export default async function handler(
   res: NextApiResponse
 ) {
   try {
-    // const circuitId = getRouterParam(event, 'circuitId')
-
-    const circuitId = 2
+    const circuitId = req.query.circuitId
   
     const allResults = await fetch('https://ergast.com/api/f1/2024.json')
+
   
     if (!allResults.ok) {
-        throw new Error(`Ergast API error: ${allResults.status}`)
+        throw new Error(`Failed to fetch all results: ${allResults.status}`)
     }
     const results: Results = await allResults.json()
   
     // get parameter from url
     const round = results.MRData.RaceTable.Races.filter((race: Race) => {
-      return race.Circuit.circuitId === circuitId.toString()
-    })[0].round
+      return race.Circuit.circuitId === circuitId
+    })[0]?.round
   
     /* ------------------------------ */
 
     const allwinners = await fetch(`https://ergast.com/api/f1/2024/${round}/results.json`)
   
     if (!allwinners.ok) {
-      throw new Error(`Ergast API error: ${allwinners.status}`)
+      throw new Error(`Failed to fetch all winners: ${allwinners.status}`)
     }
     const winners = await allwinners.json()
 

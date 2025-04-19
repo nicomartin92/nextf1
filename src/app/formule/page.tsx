@@ -1,11 +1,13 @@
 'use client'
 import Link from 'next/link'
 import { useEffect, useState } from 'react'
+import styles from './formule.module.css'
 
 type Race = {
   round: string
   Circuit: {
     circuitId: string
+    circuitName: string
   }
 } 
 
@@ -58,12 +60,11 @@ export default function Page() {
     
     return (
         <div>   
-            <h1>Liste des courses</h1>
+            <h1>Liste des grand prix 2024</h1>
             {racesResults.map((r) => (
-                <div key={r.round} className="flex flex-row gap-2">
-                    <div>round: {r.round}</div>
-                    <div>circuitId: {r.Circuit.circuitId}</div>
-                    <Link href={`/formule/${r.Circuit.circuitId}`}>{r.Circuit.circuitId}</Link>
+                <div key={r.round} className={styles.item}>
+                    <div>{r.Circuit.circuitName}</div>
+                    <Link href={`/formule/${r.Circuit.circuitId}&round=${r.round}`}>Voir les résultats</Link>
                 </div>
             ))}
         </div>

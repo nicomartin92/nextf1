@@ -131,3 +131,9 @@ li {
     @apply bg-background text-foreground;
     }
 }
+
+
+a {
+    color: #0077d7;
+    text-decoration: none;
+  }
