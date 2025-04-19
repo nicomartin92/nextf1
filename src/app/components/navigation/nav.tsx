@@ -1,12 +1,13 @@
 import Link from 'next/link'
+import styles from './Nav.module.css'
 
 const Nav = () => {
     return (
-        <nav className="flex gap-4 p-4 bg-gray-100">
-            <ul>
+        <nav className={styles.nav}>
+            <ul className="mx-auto w-fit flex gap-4 uppercase">
                 <li>
                     <Link href="/">Home</Link>
-                    <Link href="/formule">Formule</Link>
+                    <Link href="/formule">Les courses</Link>
                 </li>
             </ul>
         </nav>

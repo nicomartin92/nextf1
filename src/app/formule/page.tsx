@@ -19,42 +19,42 @@ export default function Page() {
     const [error, setError] = useState<string | null>(null)
 
     useEffect(() => {
-        /* const fetchResults = async () => {
-          try {
-            const res = await fetch('/api/f1')
-            if (!res.ok) throw new Error(`Erreur: ${res.status}`)
-            const data = await res.json()
-    
-            setRaceName(data.raceName)
-            setResults(data.results)
-          } catch (err: unknown) {
-            setError(err instanceof Error ? err.message : 'Une erreur inconnue est survenue')
-          } finally {
-            setLoading(false)
-          }
+      /* const fetchResults = async () => {
+        try {
+          const res = await fetch('/api/f1')
+          if (!res.ok) throw new Error(`Erreur: ${res.status}`)
+          const data = await res.json()
+  
+          setRaceName(data.raceName)
+          setResults(data.results)
+        } catch (err: unknown) {
+          setError(err instanceof Error ? err.message : 'Une erreur inconnue est survenue')
+        } finally {
+          setLoading(false)
         }
-    
-        fetchResults() */
+      }
+  
+      fetchResults() */
 
-        const fetchRaces = async () => {
-          try {
-            const res = await fetch('/api/races')
-            if (!res.ok) throw new Error(`Erreur: ${res.status}`)
-            const data = await res.json()
-    
-            setRaceResults(data.results)
-          } catch (err: unknown) {
-            setError(err instanceof Error ? err.message : 'Une erreur inconnue est survenue')
-          } finally {
-            setLoading(false)
-          }
+      const fetchRaces = async () => {
+        try {
+          const res = await fetch('/api/races')
+          if (!res.ok) throw new Error(`Erreur: ${res.status}`)
+          const data = await res.json()
+  
+          setRaceResults(data.results)
+        } catch (err: unknown) {
+          setError(err instanceof Error ? err.message : 'Une erreur inconnue est survenue')
+        } finally {
+          setLoading(false)
         }
-    
-        fetchRaces()
-      }, [])
-    
-      if (loading) return <p>Chargement...</p>
-      if (error) return <p>Erreur : {error}</p>
+      }
+  
+      fetchRaces()
+    }, [])
+  
+    if (loading) return <p>Chargement...</p>
+    if (error) return <p>Erreur : {error}</p>
     
     return (
         <div>   
