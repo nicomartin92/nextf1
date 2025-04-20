@@ -11,8 +11,8 @@ export const cars = [
     },
     {
         id: 3,
-        name: "Red Bull",
-        image: '/cars/redbull.avif'
+        name: "red_bull",
+        image: '/cars/red-bull-racing.avif'
     }, 
     {
         id: 4,
@@ -27,7 +27,7 @@ export const cars = [
     {
         id: 6,
         name: "aston_martin",
-        image: '/cars/astonmartin.avif'
+        image: '/cars/aston-martin.avif'
     },
     {
         id: 7,
@@ -41,12 +41,12 @@ export const cars = [
     },
     {
         id: 9,
-        name: "KickSauber",
+        name: "sauber",
         image: '/cars/kick-sauber.avif'
     },
     {
         id: 10,
-        name: "red_bull",
+        name: "rb",
         image: '/cars/racing-bulls.avif'
     },
 ]
