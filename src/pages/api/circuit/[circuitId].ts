@@ -1,4 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
+import data from '../../../data/local/races2024.json'
+
 
 type Race = {
   Circuit: {
@@ -26,13 +28,7 @@ export default async function handler(
   try {
     const circuitId = req.query.circuitId
   
-    const allResults = await fetch('https://ergast.com/api/f1/2024.json')
-
-  
-    if (!allResults.ok) {
-        throw new Error(`Failed to fetch all results: ${allResults.status}`)
-    }
-    const results: Results = await allResults.json()
+    const results: Results = data
   
     // get parameter from url
     const round = results.MRData.RaceTable.Races.filter((race: Race) => {
