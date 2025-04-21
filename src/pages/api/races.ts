@@ -1,4 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
+import data from '../../data/local/races2024.json'
 
 type Race = {
   raceName: string
@@ -28,15 +29,22 @@ export default async function handler(
   res: NextApiResponse
 ) {
   try {
-    const response = await fetch('https://ergast.com/api/f1/2024.json')
+    let races = []
     
-    if (!response.ok) {
-      throw new Error(`Ergast API error: ${response.status}`)
+    // Use local data first
+    if (data && data.MRData && data.MRData.RaceTable && data.MRData.RaceTable.Races) {
+      races = data.MRData.RaceTable.Races
+    } else {
+      // If local data doesn't exist, fetch from API
+      const response = await fetch('https://ergast.com/api/f1/2024.json')
+      
+      if (!response.ok) {
+        throw new Error(`Ergast API error: ${response.status}`)
+      }
+
+      const apiData: ResponseData = await response.json()
+      races = apiData?.MRData?.RaceTable?.Races || []
     }
-
-    const data: ResponseData = await response.json()
-
-    const races = data?.MRData?.RaceTable?.Races || []
 
     res.status(200).json(
         { 
