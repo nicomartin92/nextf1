@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import data from '../../../data/local/races2024.json'
-
+import fs from 'fs'
 
 type Race = {
   Circuit: {
@@ -37,18 +37,38 @@ export default async function handler(
   
     /* ------------------------------ */
 
-    const allwinners = await fetch(`https://ergast.com/api/f1/2024/${round}/results.json`)
+    let winnersData = []
+    
+    try {
+      // Import dynamique du fichier de course
+      const raceData = await import(`../../../data/local/winners/races-${round}.json`)
+      winnersData = raceData.default
+    } catch (error) {
+      // Si le fichier local n'existe pas, on fetch depuis l'API
+      const allwinners = await fetch(`https://ergast.com/api/f1/2024/${round}/results.json`)
   
-    if (!allwinners.ok) {
-      throw new Error(`Failed to fetch all winners: ${allwinners.status}`)
+      if (!allwinners.ok) {
+        throw new Error(`Failed to fetch all winners: ${allwinners.status}`)
+      }
+      winnersData = await allwinners.json()
+
+      const content = JSON.stringify(winnersData, null, 2)
+      fs.writeFile(`./src/data/local/winners/races-${round}.json`, content, (err) => {
+        if (err) {
+          console.error('Erreur d\'écriture:', err)
+          return
+        }
+        console.log('Fichier écrit avec succès')
+      })
+
+      console.log(error)
     }
-    const winners = await allwinners.json()
 
     res.status(200).json(
         {
             circuitId,
             round,
-            winners: winners.MRData.RaceTable.Races[0].Results,
+            winners: winnersData.MRData.RaceTable.Races[0].Results,
           }
     )
   } catch (error: unknown) {
