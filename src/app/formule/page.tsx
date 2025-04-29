@@ -43,7 +43,7 @@ export default function Page() {
             {racesResults.map((r) => (
                 <div key={r.round} className={styles.item}>
                     <div>{r.Circuit.circuitName}</div>
-                    <Link href={`/formule/${r.Circuit.circuitId}&round=${r.round}`}>Voir les résultats</Link>
+                    <Link href={`/formule/${r.Circuit.circuitId}?round=${r.round}`}>Voir les résultats</Link>
                 </div>
             ))}
         </div>
