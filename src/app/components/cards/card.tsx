@@ -8,10 +8,6 @@ type Constructor = {
 const Card = ({ result, children }: { result: Constructor, children?: React.ReactNode }) => {
     return (
         <div className={styles.card}>
-            <div className="driver">
-                <h2>Pilote</h2>
-                
-            </div>
             <div className="constructor">
                 <h2>{result.name}</h2>
                 <p>{result.nationality}</p>

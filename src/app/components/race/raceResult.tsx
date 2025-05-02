@@ -46,7 +46,7 @@ const RaceResult = ({ result }: { result: Circuit }) => {
               height={30}
               className="object-contain"
           />
-          <Link href={`/constructor/${result.Constructor.constructorId}`}>Voir détail</Link>
+          <Link href={`/constructor/${result.Constructor.constructorId}?driver=${result.Driver.driverId}`}>Voir détail</Link>
         </div>
     )
 }

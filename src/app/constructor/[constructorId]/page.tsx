@@ -35,8 +35,6 @@ export default function ConstructorPage({ params }: PageProps) {
           }
           const data = await res.json()
           setConstructorResults(data.constructor)
-
-          console.log(data.constructor)
         } catch (err: unknown) {
           setError(err instanceof Error ? err.message : `Une erreur inconnue  /api/constructor/${constructorId}`)
         } finally {

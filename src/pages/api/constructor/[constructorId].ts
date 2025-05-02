@@ -1,6 +1,4 @@
-import { NextApiResponse } from "next";
-
-import { NextApiRequest } from "next";
+import { NextApiResponse, NextApiRequest } from "next";
 
 type DriverInfo = {
     Constructors: Array<{
@@ -33,16 +31,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
         res.status(200).json(
             {
-                driver: {
-                    name: '',
-                    lastName: '',
-                    nationality: '',
-                },
                 constructor: {
                     id: constructorData?.MRData.ConstructorTable.Constructors[0].constructorId,
                     name: constructorData?.MRData.ConstructorTable.Constructors[0].name,
                     nationality: constructorData?.MRData.ConstructorTable.Constructors[0].nationality
-                } 
+                }
             }
         )
     }
