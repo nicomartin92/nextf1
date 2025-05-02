@@ -1,4 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
+import fs from 'fs'
 
 type RaceResponse = Array<{
     country_name: string
@@ -12,15 +13,29 @@ export default async function handler(
 ) {
   try {
     let races = []
-    
-    const response = await fetch('https://api.openf1.org/v1/sessions?year=2025&session_type=Race')
+  
+    try { 
+      const raceData = await import('../../data/local/races2025.json')
+      races = raceData.default
+    } catch {
+      const response = await fetch('https://api.openf1.org/v1/sessions?year=2025&session_type=Race')
       
-    if (!response.ok) {
-    throw new Error(`Ergast API error: ${response.status}`)
+      if (!response.ok) {
+        throw new Error(`Ergast API error: ${response.status}`)
+      }
+  
+      const apiData: RaceResponse = await response.json()
+      races = apiData || []
+  
+      const content = JSON.stringify(apiData, null, 2)
+      fs.writeFile(`./src/data/local/races2025.json`, content, (err) => {
+        if (err) {
+          console.error('Erreur d\'écriture:', err)
+          return
+        }
+        console.log('Fichier écrit avec succès')
+      })
     }
-
-    const apiData: RaceResponse = await response.json()
-    races = apiData || []
 
     const results = races.map((race) => {
         return {
@@ -29,7 +44,7 @@ export default async function handler(
             session_key: race.session_key
         }
     })
-
+   
     res.status(200).json(
         { 
             results,
