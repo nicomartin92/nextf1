@@ -1,4 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
+import fs from 'fs'
 
 type RaceResponse = Array<{
     driver_number: number
@@ -28,52 +29,67 @@ export default async function handler(
   res: NextApiResponse
 ) {
   try {
-    let races = []
+    let pilotes: Pilote[] = []
     const sessionId = req.query.sessionId
-    const response = await fetch(`https://api.openf1.org/v1/position?session_key=${sessionId}`)
-      
-    if (!response.ok) {
-    throw new Error(`Ergast API error: ${response.status}`)
-    }
 
-    const apiData: RaceResponse = await response.json()
-    races = apiData || []
-
-    console.log(response)
-
-    // keep last position for each driver_number
-    const latestPositionPerDriver: Record<number, Position> = {};
-    for (const entry of races) {
-        const { driver_number, lap_number } = entry;
-        if (
-            !latestPositionPerDriver[driver_number] ||
-            lap_number > latestPositionPerDriver[driver_number].lap_number
-        ) {
-            latestPositionPerDriver[driver_number] = entry;
+    try {
+        // Import dynamique du fichier de course
+        const piloteData = await import(`../../../data/local/sessions/session-${sessionId}.json`)
+        pilotes = piloteData.default
+    } catch (error) {
+        let races = []
+        const response = await fetch(`https://api.openf1.org/v1/position?session_key=${sessionId}`)
+          
+        if (!response.ok) {
+        throw new Error(`Ergast API error: ${response.status}`)
         }
+    
+        const apiData: RaceResponse = await response.json()
+        races = apiData || []
+    
+        // keep last position for each driver_number
+        const latestPositionPerDriver: Record<number, Position> = {};
+        for (const entry of races) {
+            const { driver_number, lap_number } = entry;
+            if (
+                !latestPositionPerDriver[driver_number] ||
+                lap_number > latestPositionPerDriver[driver_number].lap_number
+            ) {
+                latestPositionPerDriver[driver_number] = entry;
+            }
+        }
+    
+        // convert to array and sort by position
+        const finalPositions = Object.values(latestPositionPerDriver).sort(
+            (a, b) => a.position - b.position
+        );
+    
+        // get drivers names
+        const driversRes = await fetch('https://api.openf1.org/v1/drivers');
+        const drivers: Driver[] = await driversRes.json();
+    
+        // associate names to results
+        pilotes = finalPositions.map((pos) => {
+            const driver = drivers.find((d) => d.driver_number === pos.driver_number);
+    
+            return {
+                position: pos.position,
+                driver_number: pos.driver_number,
+                name: driver?.full_name || "Nom inconnu",
+            };
+        });
+
+        const content = JSON.stringify(pilotes, null, 2)
+        fs.writeFile(`./src/data/local/sessions/session-${sessionId}.json`, content, (err) => {
+            if (err) {
+                console.error('Erreur d\'écriture:', err)
+                return
+            }
+            console.log('Fichier écrit avec succès')
+        })
+
+        console.log(error)
     }
-
-    // convert to array and sort by position
-    const finalPositions = Object.values(latestPositionPerDriver).sort(
-        (a, b) => a.position - b.position
-    );
-
-    // get drivers names
-    const driversRes = await fetch('https://api.openf1.org/v1/drivers');
-    const drivers: Driver[] = await driversRes.json();
-
-    // associate names to results
-    const results2 = finalPositions.map((pos) => {
-        const driver = drivers.find((d) => d.driver_number === pos.driver_number);
-
-        return {
-            position: pos.position,
-            driver_number: pos.driver_number,
-            name: driver?.full_name || "Nom inconnu",
-        };
-    });
-
-    const pilotes: Pilote[] = results2;
 
     res.status(200).json(
         {
