@@ -13,11 +13,43 @@ export default async function handler(
 ) {
   try {
     let races = []
+    let hasChanges = false
   
     try { 
       const raceData = await import('../../data/local/races2025.json')
       races = raceData.default
+
+      // Fetch remote data to compare
+      const response = await fetch('https://api.openf1.org/v1/sessions?year=2025&session_type=Race')
+      
+      if (!response.ok) {
+        throw new Error(`Ergast API error: ${response.status}`)
+      }
+  
+      const apiData: RaceResponse = await response.json()
+      
+      // Compare local and remote data
+      const localDataStr = JSON.stringify(races.sort((a, b) => String(a.session_key).localeCompare(String(b.session_key))))
+      const remoteDataStr = JSON.stringify(apiData.sort((a, b) => String(a.session_key).localeCompare(String(b.session_key))))
+      
+      hasChanges = localDataStr !== remoteDataStr
+
+      if (hasChanges) {
+        console.log('Changes detected in remote data, updating local file')
+        races = apiData
+        const content = JSON.stringify(apiData, null, 2)
+        fs.writeFile(`./src/data/local/races2025.json`, content, (err) => {
+          if (err) {
+            console.error('Erreur d\'écriture:', err)
+            return
+          }
+          console.log('Fichier mis à jour avec succès')
+        })
+      } else {
+        console.log('No changes detected in remote data')
+      }
     } catch {
+      // If local file doesn't exist or there's an error, fetch from API
       const response = await fetch('https://api.openf1.org/v1/sessions?year=2025&session_type=Race')
       
       if (!response.ok) {
@@ -26,6 +58,7 @@ export default async function handler(
   
       const apiData: RaceResponse = await response.json()
       races = apiData || []
+      hasChanges = true
   
       const content = JSON.stringify(apiData, null, 2)
       fs.writeFile(`./src/data/local/races2025.json`, content, (err) => {
@@ -48,6 +81,7 @@ export default async function handler(
     res.status(200).json(
         { 
             results,
+            hasChanges
         }
     )
   } catch (error: unknown) {

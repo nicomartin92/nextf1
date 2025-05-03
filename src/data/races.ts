@@ -2,27 +2,27 @@ export const races = [
     {
         id: 1,
         name: "bahrain",
-        image: '/races/abu-dhabi.webp'
+        image: '/races/bahrain.webp'
     },
     {
         id: 2,
-        name: "jeddah",
-        image: '/races/arabie-saoudite.webp'
+        name: "Saudi Arabia",
+        image: '/races/jeddah.webp'
     },
     {
         id: 3,
-        name: "albert_park",
-        image: '/races/australie.webp'
+        name: "australia",
+        image: '/races/melbourne.webp'
     },
     {
         id: 4,
-        name: "suzuka",
+        name: "japan",
         image: '/races/japon.webp'
     },
     {
         id: 5,
-        name: "shanghai",
-        image: ''
+        name: "china",
+        image: '/races/china.webp'
     },
     {
         id: 6,

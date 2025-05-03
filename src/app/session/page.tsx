@@ -2,6 +2,7 @@
 import Link from 'next/link'
 import { useEffect, useState } from 'react'
 import styles from '../formule/formule.module.css'
+import dateFormat from '../helpers/date'
 
 type Race = {
     country_name: string
@@ -37,12 +38,12 @@ export default function Page() {
     
     return (
         <div>   
-            <h1>Liste des grand prix 2025</h1>
+            <h1>Liste des grands prix 2025</h1>
             {racesResults.map((r) => (
                 <div key={r.session_key} className={styles.item}>
                     <div>{r.country_name}</div>
-                    <div>{r.date_start}</div>
-                    <Link href={`/session/${r.session_key}?grand_prix=${r.country_name}&date=${r.date_start}`}>Voir les résultats</Link>
+                    <div>{dateFormat(r.date_start)}</div>
+                    <Link href={`/session/${r.session_key}`}>Voir</Link>
                 </div>
             ))}
         </div>

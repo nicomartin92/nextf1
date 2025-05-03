@@ -32,6 +32,16 @@ export default async function handler(
     let pilotes: Pilote[] = []
     const sessionId = req.query.sessionId
 
+    // global race data
+    const raceData = await import('../../../data/local/races2025.json')
+    const races = raceData.default
+
+    const raceInfo = {
+        location: races.find((race) => race.session_key === Number(sessionId))?.location,
+        country_name: races.find((race) => race.session_key === Number(sessionId))?.country_name,
+        circuit_short_name: races.find((race) => race.session_key === Number(sessionId))?.circuit_short_name,
+    }
+
     try {
         // Import dynamique du fichier de course
         const piloteData = await import(`../../../data/local/sessions/session-${sessionId}.json`)
@@ -94,6 +104,7 @@ export default async function handler(
     res.status(200).json(
         {
             pilotes,
+            raceInfo,
         }
     )
   } catch (error: unknown) {
