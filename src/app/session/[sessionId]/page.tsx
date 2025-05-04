@@ -59,8 +59,6 @@ export default function CircuitPage({ params }: PageProps) {
 
   const { location, country_name, circuit_short_name } = sessionResults?.raceInfo || {}
 
-  console.log('raceInfo', sessionResults)
-
   const circuitImage = races.find((c) => c.name.toLowerCase() === country_name?.toLowerCase())?.image
 
   console.log('circuitImage', country_name)

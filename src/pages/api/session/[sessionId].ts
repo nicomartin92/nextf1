@@ -61,6 +61,7 @@ export default async function handler(
         const latestPositionPerDriver: Record<number, Position> = {};
         for (const entry of races) {
             const { driver_number, lap_number } = entry;
+            
             if (
                 !latestPositionPerDriver[driver_number] ||
                 lap_number > latestPositionPerDriver[driver_number].lap_number

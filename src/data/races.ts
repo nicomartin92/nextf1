@@ -26,8 +26,8 @@ export const races = [
     },
     {
         id: 6,
-        name: "miami",
-        image: '/races/etats-unis.webp'
+        name: "United States",
+        image: '/races/miami.webp'
     },
     {
         id: 7,

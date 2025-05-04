@@ -70,13 +70,14 @@ export default async function handler(
       })
     }
 
-    const results = races.map((race) => {
-        return {
-            country_name: race.country_name,
-            date_start: race.date_start,
-            session_key: race.session_key
-        }
-    })
+    const results = races.sort((a, b) => String(a.date_start).localeCompare(String(b.date_start)))
+                          .map((race) => {
+                            return {
+                                country_name: race.country_name,
+                                date_start: race.date_start,
+                                session_key: race.session_key
+                            }
+                          })
    
     res.status(200).json(
         { 
