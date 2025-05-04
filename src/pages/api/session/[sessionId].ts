@@ -10,12 +10,14 @@ type RaceResponse = Array<{
 type Driver = {
     driver_number: number
     full_name: string
+    team_name: string
 }
 
 type Pilote = {
     position: number
     driver_number: number
     name: string
+    
 }
 
 type Position = {
@@ -80,13 +82,18 @@ export default async function handler(
         const drivers: Driver[] = await driversRes.json();
     
         // associate names to results
-        pilotes = finalPositions.map((pos) => {
+        pilotes = finalPositions
+        .filter((pos) => {
+            const driver = drivers.find((d) => d.driver_number === pos.driver_number);
+            return driver?.team_name !== null
+           }).map((pos) => {
             const driver = drivers.find((d) => d.driver_number === pos.driver_number);
     
             return {
                 position: pos.position,
                 driver_number: pos.driver_number,
                 name: driver?.full_name || "Nom inconnu",
+                team_name: driver?.team_name || "Equipe inconnue",
             };
         });
 

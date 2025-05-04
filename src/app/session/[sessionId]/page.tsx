@@ -4,6 +4,7 @@ import Image from 'next/image'
 import ErrorMessage from '@/app/components/fetchComponents/error'
 import LoadingSpinner from '@/app/components/fetchComponents/loading'
 import { races } from '@/data/races'
+import { cars } from '@/data/cars'
 
 interface PageProps {
   params: Promise<{
@@ -15,6 +16,7 @@ type Pilote = {
   position: number
   driver_number: number
   name: string
+  team_name: string
 }
 
 type RaceInfo = {
@@ -86,6 +88,14 @@ export default function CircuitPage({ params }: PageProps) {
             <p>{result.name}&nbsp;</p>
             <p>n° {result.position}&nbsp;</p>
             <p>(#{result.driver_number})</p>
+            {result.team_name}
+            <Image 
+                src={cars.find((c) => c.name.toLowerCase() === result?.team_name.toLowerCase())?.image || ''} 
+                alt={`${result.team_name} car`}
+                width={100}
+                height={30}
+                className="object-contain"
+            />
           </div>
         ))}
       </div>
