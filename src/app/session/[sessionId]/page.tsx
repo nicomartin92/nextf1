@@ -84,7 +84,7 @@ export default function CircuitPage({ params }: PageProps) {
       <div>
         <h2>Classement :</h2>
         {sessionResults?.pilotes.map((result) => (
-          <div key={result.driver_number} className="flex items-center justify-center">
+          <div key={result.driver_number} className="flex items-center justify-between">
             <p>{result.name}&nbsp;</p>
             <p>n° {result.position}&nbsp;</p>
             <p>(#{result.driver_number})</p>
