@@ -9,7 +9,7 @@ import LoadingSpinner from '@/app/components/fetchComponents/loading'
 
 interface PageProps {
   params: Promise<{
-    circuitId: string;
+    circuitId: string
   }>
 }
 
@@ -31,7 +31,7 @@ type Circuit = {
     constructorId: string
   }
   status: string
-} 
+}
 
 export default function CircuitPage({ params }: PageProps) {
   const searchParams = useSearchParams()
@@ -52,31 +52,33 @@ export default function CircuitPage({ params }: PageProps) {
       const data = await res.json()
       setCircuitResults(data.winners)
     } catch (err: unknown) {
-      setError(err instanceof Error ? err.message : `Une erreur inconnue  /api/circuit/${circuitId}`)
+      setError(
+        err instanceof Error ? err.message : `Une erreur inconnue  /api/circuit/${circuitId}`
+      )
     } finally {
       setLoading(false)
     }
   }, [circuitId])
 
-  useEffect(() => {  
+  useEffect(() => {
     fetchRaces()
   }, [fetchRaces])
 
   if (loading) return <LoadingSpinner />
   if (error) return <ErrorMessage message={error} />
 
-  const circuitImage = races.find((c) => c.name.toLowerCase() === circuitId.toLowerCase())?.image
+  const circuitImage = races.find(c => c.name.toLowerCase() === circuitId.toLowerCase())?.image
 
   return (
     <div className="max-w-4xl mx-auto p-4">
       <h1 className="text-3xl font-bold mb-6 text-center">Circuit {circuitId} 2024</h1>
       <h2 className="text-xl font-bold mb-6 text-center">course n°{round}</h2>
-      
+
       <div className="mb-8">
         <div className="mx-auto w-fit">
           {circuitImage && (
-            <Image 
-              src={circuitImage} 
+            <Image
+              src={circuitImage}
               alt={`Circuit ${circuitId}`}
               width={300}
               height={150}
@@ -87,7 +89,7 @@ export default function CircuitPage({ params }: PageProps) {
       </div>
 
       <div className="grid gap-4">
-        {circuitResults.map((result) => (
+        {circuitResults.map(result => (
           <RaceResult key={result.Driver.driverId} result={result} />
         ))}
       </div>
