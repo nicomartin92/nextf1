@@ -1,4 +1,5 @@
 'use client'
+
 import { use } from 'react'
 import Image from 'next/image'
 import ErrorMessage from '@/app/components/fetchComponents/error'
@@ -6,6 +7,9 @@ import LoadingSpinner from '@/app/components/fetchComponents/loading'
 import { races } from '@/data/races'
 import { cars } from '@/data/cars'
 import useSWR from 'swr'
+import { usePiloteStore } from '@/lib/store/piloteWhishList'
+import { Star } from 'lucide-react'
+import IconsLucide from '@/app/components/buttons/icons'
 
 interface PageProps {
   params: Promise<{
@@ -65,14 +69,15 @@ export default function CircuitPage({ params }: PageProps) {
     }
   )
 
+  // store pilotes
+  const pilotes = usePiloteStore(state => state.pilotes)
+  const setPilotes = usePiloteStore(state => state.setPilotes)
+
   if (isLoading) return <LoadingSpinner />
   if (error) return <ErrorMessage message={error.message} />
 
   const { location, country_name, circuit_short_name } = sessionResults?.raceInfo || {}
-
   const circuitImage = races.find(c => c.name.toLowerCase() === country_name?.toLowerCase())?.image
-
-  console.log('circuitImage', country_name)
 
   return (
     <div className="max-w-4xl mx-auto p-4">
@@ -121,6 +126,7 @@ export default function CircuitPage({ params }: PageProps) {
               height={30}
               className="object-contain"
             />
+            <IconsLucide onClick={() => setPilotes([...pilotes, result.name])} icon={Star} />
           </div>
         ))}
       </div>

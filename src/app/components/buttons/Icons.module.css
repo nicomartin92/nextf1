@@ -1,0 +1,15 @@
+.iconsLucide {
+  all: unset;
+  cursor: pointer;
+  padding: 0.5rem;
+  color: #3b82f6;
+  transition: all 0.2s;
+
+  &:hover {
+    color: #2563eb;
+  }
+
+  &.active {
+    color: #f59e0b;
+  }
+}
