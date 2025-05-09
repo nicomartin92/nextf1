@@ -1,38 +1,22 @@
 'use client'
 
 import { use } from 'react'
+import { races } from '@/data/races'
 import Image from 'next/image'
 import ErrorMessage from '@/app/components/fetchComponents/error'
 import LoadingSpinner from '@/app/components/fetchComponents/loading'
-import { races } from '@/data/races'
-import { cars } from '@/data/cars'
+import IconsLucide from '@/app/components/buttons/icons'
+
 import useSWR from 'swr'
 import { usePiloteStore } from '@/lib/store/piloteWhishList'
 import { Star } from 'lucide-react'
-import IconsLucide from '@/app/components/buttons/icons'
+import { Pilote, SessionResults } from '@/types/session'
+import CardPilote from '@/app/components/cards/cardPilote'
 
 interface PageProps {
   params: Promise<{
     sessionId: string
   }>
-}
-
-type Pilote = {
-  position: number
-  driver_number: number
-  name: string
-  team_name: string
-}
-
-type RaceInfo = {
-  location: string
-  country_name: string
-  circuit_short_name: string
-}
-
-type SessionResults = {
-  pilotes: Pilote[]
-  raceInfo: RaceInfo
 }
 
 export default function CircuitPage({ params }: PageProps) {
@@ -73,6 +57,16 @@ export default function CircuitPage({ params }: PageProps) {
   const pilotes = usePiloteStore(state => state.pilotes)
   const setPilotes = usePiloteStore(state => state.setPilotes)
 
+  function handlePiloteClick(pilote: Pilote) {
+    if (!pilotes.includes(pilote)) {
+      setPilotes([...pilotes, pilote])
+    } else {
+      setPilotes(pilotes.filter(p => p !== pilote))
+    }
+  }
+
+  console.log('pilotes store', pilotes)
+
   if (isLoading) return <LoadingSpinner />
   if (error) return <ErrorMessage message={error.message} />
 
@@ -111,23 +105,14 @@ export default function CircuitPage({ params }: PageProps) {
       <div>
         <h2>Classement :</h2>
         {sessionResults?.pilotes.map((result: Pilote) => (
-          <div key={result.driver_number} className="flex items-center justify-between">
-            <p>{result.name}&nbsp;</p>
-            <p>n° {result.position}&nbsp;</p>
-            <p>(#{result.driver_number})</p>
-            {result.team_name}
-            <Image
-              src={
-                cars.find(c => c.name.toLowerCase() === result?.team_name.toLowerCase())?.image ||
-                ''
-              }
-              alt={`${result.team_name} car`}
-              width={100}
-              height={30}
-              className="object-contain"
+          <ul className="flex items-center justify-between" key={result.driver_number}>
+            <CardPilote {...result} />
+            <IconsLucide
+              onClick={() => handlePiloteClick(result)}
+              icon={Star}
+              isSelected={pilotes.includes(result)}
             />
-            <IconsLucide onClick={() => setPilotes([...pilotes, result.name])} icon={Star} />
-          </div>
+          </ul>
         ))}
       </div>
     </div>

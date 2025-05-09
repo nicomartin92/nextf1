@@ -1,8 +1,9 @@
+import { Pilote } from '@/types/session'
 import { create } from 'zustand'
 
 interface PiloteState {
-  pilotes: string[]
-  setPilotes: (pilotes: string[]) => void
+  pilotes: Pilote[]
+  setPilotes: (pilotes: Pilote[]) => void
 }
 
 export const usePiloteStore = create<PiloteState>(set => ({

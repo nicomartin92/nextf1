@@ -3,12 +3,7 @@ import Link from 'next/link'
 import { useEffect, useState } from 'react'
 import styles from '../formule/formule.module.css'
 import dateFormat from '../helpers/date'
-
-type Race = {
-  country_name: string
-  date_start: string
-  session_key: string
-}
+import { Race } from '@/types/session'
 
 export default function Page() {
   const [racesResults, setRaceResults] = useState<Race[]>([])

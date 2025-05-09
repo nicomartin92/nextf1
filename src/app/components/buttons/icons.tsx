@@ -5,9 +5,11 @@ import { useState } from 'react'
 export default function IconsLucide({
   onClick,
   icon: Icon,
+  isSelected,
 }: {
   onClick: () => void
   icon: LucideIcon
+  isSelected: boolean
 }) {
   const [isActive, setIsActive] = useState(false)
 
@@ -19,7 +21,7 @@ export default function IconsLucide({
   return (
     <button
       onClick={handleClick}
-      className={`${styles.iconsLucide} ${isActive ? styles.active : ''}`}
+      className={`${styles.iconsLucide} ${isActive || isSelected ? styles.active : ''}`}
     >
       <Icon size={20} />
     </button>
