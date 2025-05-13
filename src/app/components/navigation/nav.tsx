@@ -8,6 +8,7 @@ const Nav = () => {
         <li>
           <Link href="/">Home</Link>
           <Link href="/session">Saison 2025</Link>
+          <Link href="/standings">Classement</Link>
         </li>
       </ul>
     </nav>
